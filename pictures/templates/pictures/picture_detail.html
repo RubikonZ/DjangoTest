@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменить изображение</title>
+</head>
+{% if picture %}
+<h1>{{ picture.file_name }}</h1>
+<body>
+    <img src="{% url 'pictures:picture_detail' picture.id %}">
+</body>
+{% endif %}
+
+
+
+</html>

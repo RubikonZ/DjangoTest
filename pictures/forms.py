@@ -1,33 +1,29 @@
 from django import forms
 from .models import Picture
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.exceptions import ValidationError
+import requests
+import shutil
+import urllib.request
+import os
 
 
-class CreateForm(forms.ModelForm):
-    #max_upload_limit = 2 * 1024 * 1024
+class UploadImageForm(forms.Form):
 
-    # Call this 'picture' so it gets copied from the form to the in-memory model
-    # It will not be the "bytes", it will be the "InMemoryUploadedFile"
-    # because we need to pull out things like content_type
-    picture = forms.FileField(required=True, label='Выбрать')
-    upload_field_name = 'picture'
-    # picture = forms.ImageField(required=True, label=Выбрать') # Если хотим хранить изображения в форме изображений
-    #upload_field_name = 'picture'
+    url = forms.URLField(label='URL to image', required=False)
+    picture = forms.ImageField(required=False, label='Choose Image')
 
-    class Meta:
-        model = Picture
-        fields = ['picture']
+    def clean(self):
+        # Additional condition for fields (Have to choose one and only one of methods)
+        cleaned_data = super().clean()
+        url_field = cleaned_data.get('url')
+        pic_field = cleaned_data.get('picture')
 
-    # Конвертирую файл в изображение
-    def save(self, commit=True):
-        instance = super(CreateForm, self).save(commit=False)
+        if url_field and pic_field:
+            raise ValidationError('Choose ONLY one of the methods')
+        elif not url_field and not pic_field:
+            raise ValidationError('Choose AT LEAST one method')
 
-        f = instance.picture
-        if isinstance(f, InMemoryUploadedFile):
-            byte_img = f.read()
-            instance.content_type = f.content_type
-            instance.picture = byte_img
 
-        if commit:
-            instance.save()
-        return instance
+class ResizeImageForm(forms.Form):
+    pass

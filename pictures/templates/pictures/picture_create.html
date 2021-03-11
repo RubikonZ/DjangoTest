@@ -3,17 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Добавить изображение</title>
+    <title>Add Picture</title>
 </head>
 
-<a href="{% url 'pictures:all' %}">Назад к списку</a>
+<a href="{% url 'pictures:all' %}">Back to the list</a>
 
 <body>
     <p>
+        {% load crispy_forms_tags %}
   <form action="" method="post" id="upload_form" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Отправить">
+        {{ form|crispy }}
+        <p><input type="submit" value="Submit"></p>
   </form>
     </p>
 

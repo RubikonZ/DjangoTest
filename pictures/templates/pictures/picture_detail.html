@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+<a href="{% url 'pictures:all' %}">Назад к списку</a>
 <head>
     <meta charset="UTF-8">
     <title>Изменить изображение</title>
 </head>
 {% if picture %}
-<h1>{{ picture.file_name }}</h1>
+<h1>{{ picture.picture_name }}</h1>
 <body>
-    <img src="{% url 'pictures:picture_detail' picture.id %}">
+    <img src="{{ picture.picture.url }}">
 </body>
 {% endif %}
 

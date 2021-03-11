@@ -14,7 +14,7 @@
 <ul>
   {% for picture in picture_list %}
     <li>
-        <a href="{% url 'pictures:picture_detail'  picture.id %}">{{ picture.file_name }}</a>
+        <a href="{% url 'pictures:picture_detail'  picture.id %}">{{ picture.picture_name }}</a>
     </li>
   {% endfor %}
 </ul>

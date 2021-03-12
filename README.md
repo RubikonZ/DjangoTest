@@ -18,10 +18,13 @@ Set up your development environment:
 ```
 python3 -m virtualenv venv
 ```
-
+To activate and work in newly created environment:
+```
+source venv/bin/activate
+```
 Install required modules:
 ```
-venv/bin/python3 install -r requirements.txt
+python install -r requirements.txt
 ```
 
 Make sure you have migrations up-to-date:

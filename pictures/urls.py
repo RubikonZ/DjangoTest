@@ -9,7 +9,7 @@ urlpatterns = [
     path('<int:pk>/', views.PictureDetailView.as_view(), name='picture_detail'),
     path('img/<int:pk>/', views.stream_file, name='img'),
     path('create/', views.PictureCreateView.as_view(success_url=reverse_lazy('pictures:all')), name='picture_create'),
-    path('<int:pk>/update/', views.PictureUpdateView.as_view(success_url=reverse_lazy('pictures:all')), name='picture_update')
-]
+    ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

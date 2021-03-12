@@ -122,33 +122,10 @@ class PictureCreateView(View):
                         f.write(chunk)
         pic.save()
         return redirect(self.success_url)
-# https://pbs.twimg.com/media/EwFdp2eXMAID98e.jpg
-
-class PictureUpdateView(View):
-    template_name = 'pictures/picture_create.html'
-    success_url = reverse_lazy('pictures:all')
-
-    def get(self, request, pk):
-        picture = get_object_or_404(Picture, id=pk)
-        form = ResizeImageForm()
-        ctx = {'form': form}
-        return render(request, self.template_name, ctx)
-
-    def post(self, request, pk=None):
-        picture = get_object_or_404(Picture, id=pk)
-        form = ResizeImageForm(request.POST, request.FILES or None)
-
-        if not form.is_valid():
-            ctx = {'form': form}
-            return render(request, self.template_name, ctx)
-
-        ad = form.save(commit=False)
-        ad.save()
-
-        return redirect(self.success_url)
 
 
 def stream_file(request, pk):
+    # Constructing link for each image
     pic = get_object_or_404(Picture, id=pk)
     response = HttpResponse()
     response['Content-Type'] = pic.content_type

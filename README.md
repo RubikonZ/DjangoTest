@@ -39,3 +39,9 @@ Now you can start web application:
 ```
 python manage.py runserver
 ```
+
+By default this web application uses port 8000. You can connect to it with these links:
+```
+http://127.0.0.1:8000/
+http://localhost:8000/
+```

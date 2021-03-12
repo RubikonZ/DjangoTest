@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Изображения</title>
+    <title>Test Assignment</title>
 </head>
 
 
 <body>
-<h1>Список изображений</h1>
+<h1>List of Images</h1>
 
 <p>
 {% if picture_list %}
@@ -19,12 +19,12 @@
   {% endfor %}
 </ul>
 {% else %}
-  <p>Нет доступных изображений.</p>
+  <p>No available images</p>
 {% endif %}
 </p>
 
 <p>
-<a href="{% url 'pictures:picture_create' %}">Добавить изображение</a>
+<a href="{% url 'pictures:picture_create' %}">Add new image</a>
 </p>
 </body>
 </html>

@@ -10,11 +10,17 @@
         {{ form }}
         <p><input type="submit" value="Submit"></p>
   </form>
-{% if picture %}
 <h1>{{ picture.picture_name }}</h1>
-<body>
-    <img src="{{ picture.picture.url }}">
-</body>
+{% if picture %}
+    {% if picture.picture %}
+        <body>
+            <img src="{{ picture.picture.url }}">
+        </body>
+    {% elif picture.parent_picture %}
+        <body>
+            <img src="{{ picture.parent_picture.url }}">
+        </body>
+    {% endif %}
 {% endif %}
 
 

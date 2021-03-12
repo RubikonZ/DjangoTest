@@ -66,9 +66,9 @@ class PictureDetailView(View):
 
         new_width = int(image.width*resize_ratio)
         new_height = int(image.height*resize_ratio)
-        img_copy = image.resize((new_width, new_height), Image.ANTIALIAS)
-        img_fit = ImageOps.fit(img_copy, (1000, 1000), centering=(0.5, 0.5))
-        filename, extension = pic.picture_name.split('.')
+        img_copy = image.resize((new_width, new_height), Image.ANTIALIAS) # Creates copy of resized picture
+        img_fit = ImageOps.fit(img_copy, (1000, 1000), centering=(0.5, 0.5)) # Supposed to fit img into set size
+        filename, extension = pic.picture_name.split('.') # Getting information from name of the picture
         # Turning edited picture into byte array
         byte_img = io.BytesIO()
         # img_copy.save(byte_img, format='JPEG')

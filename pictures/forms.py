@@ -26,4 +26,15 @@ class UploadImageForm(forms.Form):
 
 
 class ResizeImageForm(forms.Form):
-    pass
+    width = forms.IntegerField(required=False, label='Width')
+    height = forms.IntegerField(required=False, label='Height')
+
+    def clean(self):
+        # Additional condition for fields (Have to choose one and only one of methods)
+        cleaned_data = super().clean()
+        width_field = cleaned_data.get('width')
+        height_field = cleaned_data.get('height')
+
+        if not width_field and not height_field:
+            raise ValidationError("Haven't made any changes")
+

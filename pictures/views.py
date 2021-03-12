@@ -4,10 +4,11 @@ from django.views import View
 from pictures.forms import UploadImageForm, ResizeImageForm
 from pictures.models import Picture
 from django.http import HttpResponse
-from django.http import FileResponse
 from django.core.files.base import ContentFile
 import requests
 import re
+from PIL import Image
+import io
 
 # Create your views here.
 
@@ -26,10 +27,34 @@ class PicturesListView(View):
 class PictureDetailView(View):
     model = Picture
     template_name = 'pictures/picture_detail.html'
+    success_url = reverse_lazy('pictures:all')
 
     def get(self, request, pk):
-        x = Picture.objects.get(id=pk)
-        context = {'picture': x}
+        form = ResizeImageForm()
+        pic = Picture.objects.get(id=pk)
+        context = {'form': form, 'picture': pic}
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        # Here we get resize form
+        form = ResizeImageForm(request.POST)
+        pic = Picture.objects.get(id=pk)
+
+        if not form.is_valid():
+            ctx = {'form': form, 'picture': pic}
+            return render(request, self.template_name, ctx)
+
+        image = Image.open(pic.picture)
+        image.thumbnail((form.cleaned_data['width'], form.cleaned_data['height']), Image.ANTIALIAS)
+        filename, extension = pic.picture_name.split('.')
+        # image.save(f'{filename}_{form.cleaned_data["width"]}x{form.cleaned_data["height"]}.{extension}', quality=80)
+        # Turning edited picture into byte array
+        byte_img = io.BytesIO()
+        image.save(byte_img, format='PNG')
+        byte_img = byte_img.getvalue()
+        pic.picture = ContentFile(byte_img, name=f'resize/{filename}_{form.cleaned_data["width"]}x{form.cleaned_data["height"]}.{extension}')
+        pic.save()
+        context = {'form': form, 'picture': pic}
         return render(request, self.template_name, context)
 
 
@@ -55,7 +80,6 @@ class PictureCreateView(View):
             for filename in request.FILES:
                 pic.picture_name = request.FILES[filename]
                 pic.content_type = request.FILES[filename].content_type
-            print(pic.picture.url)
         else:
             url = form.cleaned_data['url']
             resp = requests.get(url, stream=True)
@@ -102,7 +126,6 @@ class PictureUpdateView(View):
 def stream_file(request, pk):
     pic = get_object_or_404(Picture, id=pk)
     response = HttpResponse()
-    # response = FileResponse(io.BytesIO(bytes(pic.picture)))
     response['Content-Type'] = pic.content_type
     response['Content-Length'] = len(pic.picture)
     response.write(pic.picture)
